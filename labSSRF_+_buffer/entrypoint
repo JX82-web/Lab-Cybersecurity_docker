@@ -1,0 +1,11 @@
+#!/bin/bash
+set -eu
+
+# 1. Avvia il demone cron per gestire i privilegi
+cron
+
+# 2. Avvia lo script di backend Netcat per il pwn in background
+/usr/local/bin/run_pwn.sh &
+
+# 3. Esegue Apache come processo principale (PID 1) in foreground
+exec apache2-foreground
