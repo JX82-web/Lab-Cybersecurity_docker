@@ -1,4 +1,4 @@
-# Lenguage: `IT`
+# Language: `IT`
 # Guida instroduttiva al lab 1 ) SSRF + BUFFEROVERFLOW con movimento laterale lab completo stile htb. (Hack The Box)
 + Per rilovere questo lab devi passare per diverse aree ben definite,di seguito troverai la guida alla  soluzione.
 + Divideremo lattacco in tre fasi.
