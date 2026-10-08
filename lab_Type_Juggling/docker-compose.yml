@@ -1,0 +1,35 @@
+
+services:
+  web:
+    build: ./web
+    container_name: cyber_web_app
+    ports:
+      - "80:80"       # Interfaccia web visibile all'attaccante
+      - "2222:22"     # Porta SSH mappata su 2222 per il movimento laterale su Bert
+    volumes:
+      - ./config/cron_root.sh:/opt/cron_root.sh:ro
+    networks:
+      - lab_network
+    depends_on:
+      - db
+    restart: always
+
+  db:
+    image: mariadb:10.6
+    container_name: cyber_db_internal
+    environment:
+      MYSQL_ROOT_PASSWORD: root_secure_pass_1234
+      MYSQL_DATABASE: tracking_db
+      MYSQL_USER: web_user
+      MYSQL_PASSWORD: web_password_9876
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    # NOTA: Manca la direttiva 'ports' volontariamente. Il database è isolato!
+    networks:
+      - lab_network
+    restart: always
+
+networks:
+  lab_network:
+    driver: bridge
+
