@@ -1,0 +1,30 @@
+services:
+  web_main:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ctf_pwn_web
+    ports:
+      - "80:80"
+    volumes:
+      - ./app:/var/www/html
+    networks:
+      - ctf_pwn_network
+    privileged: true
+
+    security_opt:
+      - seccomp:unconfined
+    depends_on:
+      - internal_api
+
+  internal_api:
+    image: php:8.2-apache
+    container_name: ctf_pwn_api
+    volumes:
+      - ./app_internal:/var/www/html
+    networks:
+      - ctf_pwn_network
+
+networks:
+  ctf_pwn_network:
+    driver: bridge

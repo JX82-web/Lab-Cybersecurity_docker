@@ -1,0 +1,36 @@
+services:
+  # Container 1: Il Database Server (MySQL)
+  # Ospiterà gli hash dell'admin del sito e la password di sistema di michael
+  sqli_db:
+    image: mysql:8.0
+    container_name: ctf_sqli_db
+    environment:
+      MYSQL_ROOT_PASSWORD: RootSecurePasswordMySQL2026!
+      MYSQL_DATABASE: ctf_labs
+      MYSQL_USER: web_user
+      MYSQL_PASSWORD: WebAppPasswordDB_991!
+    volumes:
+      # Lo script init.sql configurerà le tabelle e popolerà i dati all'avvio
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - ctf_sqli_network
+
+  # Container 2: Il Web Server (Apache + PHP)
+  # Ospita la Blind SQLi, il plugin ZIP difettoso e le Linux Capabilities
+  sqli_web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    container_name: ctf_sqli_web
+    ports:
+      - "80:80"
+    volumes:
+      - ./web/src:/var/www/html
+    networks:
+      - ctf_sqli_network
+    depends_on:
+      - sqli_db
+
+networks:
+  ctf_sqli_network:
+    driver: bridge
